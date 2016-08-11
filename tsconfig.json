@@ -14,6 +14,7 @@
 	"files": [
 		"typings/browser.d.ts",
 
-		"src/index.ts"
+		"src/index.ts",
+		"src/table.tsx"
 	]
 }
