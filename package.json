@@ -26,9 +26,12 @@
   "homepage": "https://github.com/jussiarpalahti/hierarchicaltable#readme",
   "dependencies": {
     "react": "^15.3.0",
-    "react-dom": "^15.3.0"
+    "react-dom": "^15.3.0",
+    "systemjs": "^0.19.36",
+    "systemjs-hot-reloader": "^0.5.8"
   },
   "devDependencies": {
+    "cbuild": "^0.1.1",
     "typescript": "^1.8.10",
     "typings": "^1.3.2"
   }

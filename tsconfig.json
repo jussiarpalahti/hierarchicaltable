@@ -9,7 +9,6 @@
 		"outDir": "dist",
 		"removeComments": false,
 		"target": "es5",
-		"allowJs": true,
 		"sourceMap": true
 	},
 	"files": [
