@@ -4,7 +4,8 @@
   "description": "Hierarchical statistical table for React",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "typings": "typings"
   },
   "repository": {
     "type": "git",
@@ -26,5 +27,9 @@
   "dependencies": {
     "react": "^15.3.0",
     "react-dom": "^15.3.0"
+  },
+  "devDependencies": {
+    "typescript": "^1.8.10",
+    "typings": "^1.3.2"
   }
 }
