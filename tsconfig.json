@@ -12,9 +12,6 @@
 		"sourceMap": true
 	},
 	"files": [
-		"typings/browser.d.ts",
-
-		"src/index.ts",
-		"src/table.tsx"
+		"src/index.tsx"
 	]
 }

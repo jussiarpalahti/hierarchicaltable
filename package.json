@@ -1,8 +1,9 @@
 {
-  "name": "hierarchicaltable",
-  "version": "0.9.1",
+  "name": "hierarchical-table",
+  "version": "0.0.2",
   "description": "Hierarchical statistical table for React",
   "main": "dist/index.js",
+  "typings": "./dist/index",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "typings": "typings",
@@ -10,7 +11,7 @@
     "cbuild": "cbuild",
     "bundle": "cbuild -d -v -m systemjs-hot-reloader -o dist/bundle.js -C config-npm.js",
     "bundle-reloader": "cbuild -d -v -s node_modules/systemjs-hot-reloader/hot-reloader.js -o reloader-bundle.js -C config-reloader.js",
-    "prepublish": "typings install && tsc && tsc -p server && npm run bundle-reloader && npm run bundle",
+    "prepublish": "typings install && tsc && npm run bundle",
     "start": "NODE_ENV=development node server/server.js"
   },
   "repository": {
