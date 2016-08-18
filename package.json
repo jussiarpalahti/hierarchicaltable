@@ -5,7 +5,8 @@
   "main": "dist/index.js",
   "typings": "./dist/index",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "pretest": "tsc test/*test.tsx --module commonjs --jsx react",
+    "test": "mocha",
     "typings": "typings",
     "tsc": "tsc",
     "cbuild": "cbuild",
@@ -39,6 +40,10 @@
   },
   "devDependencies": {
     "cbuild": "^0.1.1",
+    "chai": "^3.5.0",
+    "enzyme": "^2.4.1",
+    "mocha": "^3.0.2",
+    "react-addons-test-utils": "^15.3.0",
     "typescript": "^1.8.10",
     "typings": "^1.3.2"
   }
