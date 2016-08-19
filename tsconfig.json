@@ -15,6 +15,7 @@
 		"typings/index.d.ts",
 		"src/index",
 		"src/table",
-		"src/ManualTable"
+		"src/ManualTable",
+		"src/lib/table"
 	]
 }
