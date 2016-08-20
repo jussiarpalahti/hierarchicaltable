@@ -1,7 +1,7 @@
 
 # Hierarchical Statistical Table for PC Axis/JSON Stat data
 
-Render a hierarchical, statistical table from PC Axis/JSON Stat style format into HTML table with semantically correct structure.
+Render a hierarchical, statistical table from PC Axis based format into HTML table with semantically correct structure.
 
 Supports statserver's simple JSON format for hierarchical data:
 
