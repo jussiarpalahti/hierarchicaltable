@@ -1,5 +1,5 @@
 
-# Hierarchical Statistical Table for PC Axis/JSON Stat data
+# Hierarchical Statistical Table for PC Axis based data
 
 Render a hierarchical, statistical table from PC Axis based format into HTML table with semantically correct structure.
 
