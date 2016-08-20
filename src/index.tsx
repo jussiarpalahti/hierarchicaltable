@@ -9,7 +9,7 @@ export {ITable, get_preview_table, get_table, transform_table} from './lib/table
 export interface Dataset {
     stub: [string],
     heading: [string],
-    levels: [string],
+    levels: {string: [string]},
     name: string,
     title: string,
     url: string,
