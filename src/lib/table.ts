@@ -155,7 +155,7 @@ export function get_preview_table(table: ITable, size?: number): ITable {
     for (let index=0; index < size; index++) {
         table.heading.hop.forEach((hopper, pos) => {
             let header = hopper();
-            if (header) {
+            if (header && heading[pos].indexOf(header) === -1) {
                 heading[pos].push(header);
             }
         });
@@ -165,7 +165,7 @@ export function get_preview_table(table: ITable, size?: number): ITable {
     for (let index=0; index < size; index++) {
         table.stub.hop.map((hopper, pos) => {
             let header = hopper();
-            if (header) {
+            if (header && stub[pos].indexOf(header) === -1) {
                 stub[pos].push(header);
             }
         });
