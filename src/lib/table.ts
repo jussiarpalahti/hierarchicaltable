@@ -1,13 +1,14 @@
 
-// Header is a string or number
-type Header = string | number;
+// Header is for one row or column identifier
+export type Header = string | number;
 
-type Heading = Header[]
+// Heading is a list of all header identifiers for a particular column or row axis
+export type Heading = Header[]
 
-// Headers is a list of lists containing one Header or more
-type Headers = Heading[];
+// Headers is a list of lists containing headings for all the column and row heading levels
+export type Headers = Heading[];
 
-interface TableAxis {
+export interface TableAxis {
     size: number;
     hops: number[];
     loop: number[];
@@ -15,7 +16,7 @@ interface TableAxis {
     headers?: Headers
 }
 
-interface Table {
+export interface ITable {
     stub: TableAxis;
     heading: TableAxis;
     size: number;
@@ -112,9 +113,9 @@ function get_axis_shape (headers: Headers): TableAxis {
 }
 
 
-export function get_table (heading: Headers, stub: Headers): Table {
+export function get_table (heading: Headers, stub: Headers): ITable {
     /*
-    Generates a Table object from headers
+    Generates a ITable object from headers
      */
     let headings = get_axis_shape(heading);
     headings.headers = heading;
@@ -139,7 +140,7 @@ export function get_table (heading: Headers, stub: Headers): Table {
 }
 
 
-export function get_preview_table(table: Table, size?: number): Table {
+export function get_preview_table(table: ITable, size?: number): ITable {
     /*
 
      */
