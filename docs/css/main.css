@@ -1,4 +1,9 @@
 
+html {
+	padding:1em;
+	background-color: rgba(255, 227, 189, 0.43);
+}
+
 h1 {
     font-family: Arial sans-serif;
 }
