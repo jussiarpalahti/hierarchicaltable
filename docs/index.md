@@ -4,10 +4,22 @@ title: Hierarchical table docs
 id: home
 ---
 
-# This is the documentation
+# Using Hierarchical Table
 
- * testing
- * github
- * pages here
+```jsx
+<div>
+    Your text here
+    Some JS code below
+    {[1,2,3].map((i) => {
+                return <li>{i}</li>
+            })}
+    <Table with some args />
+    and here too
+</div>
+```
 
-It works!
+Regular content continues...
+
+ - a list
+ - for stuff
+ - goes here
