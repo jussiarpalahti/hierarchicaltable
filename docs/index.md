@@ -6,7 +6,7 @@ id: home
 
 # Using Hierarchical Table
 
-```jsx
+```js
 <div>
     Your text here
     Some JS code below
