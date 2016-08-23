@@ -1,3 +1,8 @@
+---
+layout: page
+title: Hierarchical table docs
+id: home
+---
 
 # This is the documentation
 
