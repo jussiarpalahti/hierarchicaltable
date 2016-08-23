@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: default
 title: Hierarchical table docs
 id: home
 ---
