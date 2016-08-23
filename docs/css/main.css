@@ -1,5 +1,22 @@
 
+@import url(http://fonts.googleapis.com/css?family=Snippet|Share+Tech);
+
 html {
-	padding:1em;
 	background-color: rgba(255, 227, 189, 0.43);
+}
+
+body {
+	margin: 2em;
+	font-family: 'Skia', 'Share Tech', sans-serif;
+}
+
+h1 {
+	margin: 1.5em 0;
+	font-size: 150%;
+	font-family: 'Skia', 'Share Tech', sans-serif; }
+
+h2 {
+	margin: 1.5em 0;
+	font-size: 120%;
+	font-family: 'Snippet', sans-serif;
 }
