@@ -21,9 +21,11 @@ Matrix contains a list of list where outer list has the rows and each row has th
 
 Row and column header hierarchy describes each data cell's properties, meaning what the data is about. Higher levels of hierarchy point to several adjacent cells (on horizontal or vertical axis).
 
-## Todo
+## TODO
 
- - [X] Preview table from statserver JSON (my own simple Django app that provides REST API to PC Axis file format)
- - [ ] Preview table from JSON Stat (standard for PX Web services)
- - [ ] Table header selector
+ - [X] Render full table
+ - [X] Render preview table
+ - [ ] Selector for subset of table (produce a new table for selected subset of headings)
+ - [ ] Pivot (change order of table headings)
  - [ ] Tests for full table rendering
+
