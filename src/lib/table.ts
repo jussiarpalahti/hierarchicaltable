@@ -1,4 +1,6 @@
 
+import * as _ from 'lodash';
+
 // Header is for one row or column identifier
 export type Header = string | number;
 
@@ -17,18 +19,18 @@ export interface TableAxis {
 }
 
 export interface Selections {
-    stub: {string: [number]},
-    heading: {string: [number]}
+    stub: {[key:string]: number[]},
+    heading: {[key:string]: number[]}
 }
 
 export interface Dataset {
-    stub: [string],
-    heading: [string],
-    levels: {string: [string]},
+    stub: string[],
+    heading: string[],
+    levels: {[key:string]: Array<string>},
     name: string,
     title: string,
     url: string,
-    matrix: [[string]]
+    matrix: [string[]]
 }
 
 export interface ITable {
@@ -216,15 +218,30 @@ export function transform_table(dset:Dataset): {heading: Headers, stub: Headers}
     for (let headings of dset.stub) {
         stub.push(dset.levels[headings]);
     }
+
     return {heading, stub};
 }
 
-export function get_matrix_mask(selections:Selections, table:ITable) {
-    let stub_mask = new Set();
-    let heading_mask = new Set();
+export function get_matrix_mask(selections:Selections, table:ITable):{heading: number[], stub: number[]} {
+    let stub_mask = [];
+    let heading_mask = [];
 
-    // for heading in table.stub
+    table.dataset.heading.map((heading, index) => {
+        let hop = table.heading.hops[index];
+        for (let pos of selections.heading[heading]) {
+            let start = hop * pos;
+            heading_mask.push(_.range(start, start + hop));
+        }
+    });
 
+    table.dataset.stub.map((stub, index) => {
+        let hop = table.stub.hops[index];
+        for (let pos of selections.stub[stub]) {
+            let start = hop * pos;
+            stub_mask.push(_.range(start, start + hop));
+        }
 
+    });
 
+    return {heading: _.uniq(_.flatten(heading_mask)), stub: _.uniq(_.flatten(stub_mask))};
 }
