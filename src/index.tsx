@@ -2,25 +2,15 @@
 import * as React from 'react';
 
 import {HierarchicalTable} from './table';
-import {get_table, get_preview_table, transform_table} from "./lib/table";
+import {Dataset, get_table, get_preview_table, transform_table} from "./lib/table";
 
-export {ITable, get_preview_table, get_table, transform_table} from './lib/table'
-
-export interface Dataset {
-    stub: [string],
-    heading: [string],
-    levels: {string: [string]},
-    name: string,
-    title: string,
-    url: string,
-    matrix: [[string]]
-}
+export {Dataset, ITable, get_preview_table, get_table, transform_table} from './lib/table'
 
 
 export class Table extends React.Component<{data: Dataset, preview: boolean}, {}> {
     render() {
         let {heading, stub} = transform_table(this.props.data);
-        let table = get_table(heading, stub);
+        let table = get_table(heading, stub, this.props.data);
 
         var prev_table;
         if (this.props.preview) {

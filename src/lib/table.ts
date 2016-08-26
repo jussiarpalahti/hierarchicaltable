@@ -16,12 +16,27 @@ export interface TableAxis {
     headers?: Headers
 }
 
+export interface Selections {
+    stub: {string: [number]},
+    heading: {string: [number]}
+}
+
+export interface Dataset {
+    stub: [string],
+    heading: [string],
+    levels: {string: [string]},
+    name: string,
+    title: string,
+    url: string,
+    matrix: [[string]]
+}
+
 export interface ITable {
+    dataset?:Dataset,
     stub: TableAxis;
     heading: TableAxis;
     size: number;
 }
-
 
 function create_header_hopper(headers: Header[], hop: number, limit: number): Function {
     /*
@@ -113,7 +128,7 @@ function get_axis_shape (headers: Headers): TableAxis {
 }
 
 
-export function get_table (heading: Headers, stub: Headers): ITable {
+export function get_table (heading: Headers, stub: Headers, dataset?:Dataset): ITable {
     /*
     Generates a ITable object from headers
      */
@@ -124,6 +139,7 @@ export function get_table (heading: Headers, stub: Headers): ITable {
                 headers,
                 headings.hops[index],
                 headings.size));
+
     let stubs = get_axis_shape(stub);
     stubs.headers = stub;
     stubs.hop = stub.map(
@@ -132,11 +148,20 @@ export function get_table (heading: Headers, stub: Headers): ITable {
             stubs.hops[index],
             stubs.size));
 
-    return {
-        stub: stubs,
-        heading: headings,
-        size: stubs.size * headings.size
-    };
+    if (dataset) {
+        return {
+            dataset: dataset,
+            stub: stubs,
+            heading: headings,
+            size: stubs.size * headings.size
+        };
+    } else {
+        return {
+            stub: stubs,
+            heading: headings,
+            size: stubs.size * headings.size
+        };
+    }
 }
 
 
@@ -173,7 +198,7 @@ export function get_preview_table(table: ITable, size?: number): ITable {
     return get_table(heading, stub);
 }
 
-export function transform_table(dset): any {
+export function transform_table(dset:Dataset): {heading: Headers, stub: Headers} {
     /*
 
      PX Style table has all headings in one object and list of heading keys
@@ -192,4 +217,14 @@ export function transform_table(dset): any {
         stub.push(dset.levels[headings]);
     }
     return {heading, stub};
+}
+
+export function get_matrix_mask(selections:Selections, table:ITable) {
+    let stub_mask = new Set();
+    let heading_mask = new Set();
+
+    // for heading in table.stub
+
+
+
 }
