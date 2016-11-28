@@ -197,10 +197,10 @@ export function get_preview_table(table: ITable, size?: number): ITable {
             }
         });
     }
-    return get_table(heading, stub);
+    return get_table(heading, stub, table.dataset);
 }
 
-export function transform_table(dset:Dataset): {heading: Headers, stub: Headers} {
+export function transform_table(dset:Dataset, selection?): {heading: Headers, stub: Headers} {
     /*
 
      PX Style table has all headings in one object and list of heading keys
@@ -210,13 +210,14 @@ export function transform_table(dset:Dataset): {heading: Headers, stub: Headers}
      for heading and stub separately.
 
      */
+    let levels = selection ? selection : dset.levels;
     let heading = [];
     for (let headings of dset.heading) {
-        heading.push(dset.levels[headings]);
+        heading.push(levels[headings]);
     }
     let stub = [];
     for (let headings of dset.stub) {
-        stub.push(dset.levels[headings]);
+        stub.push(levels[headings]);
     }
 
     return {heading, stub};
