@@ -77,11 +77,11 @@ class Table {
         this.stub = stub ? stub : new Axis(new Map());
     }
 
-    add_heading(name:string, headers:[Header]) {
+    add_heading(name:string, headers:Header[]) {
         this.heading.headings.set(name, headers);
     }
 
-    add_stub(name:string, headers:[Header]) {
+    add_stub(name:string, headers:Header[]) {
         this.stub.headings.set(name, headers);
     }
 
@@ -120,10 +120,26 @@ export interface Dataset {
     matrix: [string[]]
 }
 
-function create_tables(data:[Dataset]) {
+function create_table(data:Dataset):Table {
+    /*
+     from PX data to Table structure:
+     heading: [one, two, three]
+     levels: {one: [a,b,c], two:[d,e,f], three: ...}
+     transforms to:
+     Axis.headings = {one: [Header(a), Header(b), Header(c)], two: ...}
+     Using ES6 ordered map to keep heading order intact
+     */
 
-    let hed = [];
-    // for (let heading of headings) {
-    //     data.push(new Header(heading.name, heading.code, false))
-    // }
+
+    let table = new Table(data.name, data.matrix, data.url, data.title);
+
+    for (let heading of data.heading) {
+        table.add_heading(heading, data.levels[heading].map(header => new Header(header)));
+    }
+
+    for (let heading of data.stub) {
+        table.add_stub(heading, data.levels[heading].map(header => new Header(header)));
+    }
+
+    return table;
 }
