@@ -13,10 +13,10 @@ class Header {
     code:string;
     show:boolean;
 
-    constructor(name, code, show) {
+    constructor(name, code?, show?) {
         this.name = name;
-        this.code = code;
-        this.show = show;
+        this.code = code || "";
+        this.show = show || false;
     }
 }
 
@@ -43,10 +43,10 @@ class Table {
     heading:Axis;
     stub:Axis;
 
-    constructor(name, matrix, title, url, heading?, stub?) {
+    constructor(name, matrix, url, title?, heading?, stub?) {
         this.name = name;
         this.matrix = matrix;
-        this.title = title;
+        this.title = title || "";
         this.url = url;
         this.heading = heading ? heading : new Axis(new Map());
         this.stub = stub ? stub : new Axis(new Map());
