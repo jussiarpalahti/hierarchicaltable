@@ -25,6 +25,8 @@ class Table {
     constructor(name, matrix, title, url, heading?, stub?) {
         this.name = name;
         this.matrix = matrix;
+        this.title = title;
+        this.url = url;
         this.heading = heading ? heading : new Map();
         this.stub = stub ? stub : new Map();
     }
@@ -37,14 +39,15 @@ class Table {
         this.stub.set(name, headers);
     }
 
-    filter_headings(headings) {
+    filter_headings(headings):Header[][] {
+        /**
+         * Creates table axis' headings with only visible headers
+         */
+
         let resp = [];
         headings.forEach(
-            (headers, name) => resp.push(
-                    {
-                        name: name,
-                        headers: headers.filter(header => header.show)
-                    }));
+            (headers, name) => resp.push(headers.filter(header => header.show))
+        );
         return resp;
     }
 
