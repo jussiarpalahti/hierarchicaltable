@@ -130,7 +130,7 @@ function get_axis_shape (headers: Headers): TableAxis {
 }
 
 
-export function get_table (heading: Headers, stub: Headers, dataset?:Dataset): ITable {
+export function get_table (heading: any, stub: any, dataset?:Dataset): ITable {
     /*
     Generates a ITable object from headers
      */

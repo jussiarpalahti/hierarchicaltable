@@ -33,6 +33,8 @@ Process is as follows:
 
  */
 
+import {get_table} from './table';
+
 class Header {
     name:string;
     code:string;
@@ -58,6 +60,13 @@ class Axis {
     constructor(headings:THeading) {
         this.headings = headings;
     }
+
+    set_shape(size, hops, loop, hop) {
+        this.size = size;
+        this.hops = hops;
+        this.loop = loop;
+        this.hop = hop;
+    }
 }
 
 class Table {
@@ -67,14 +76,13 @@ class Table {
     url:string;
     heading:Axis;
     stub:Axis;
+    size:number;
 
     constructor(name, matrix, url, title?, heading?, stub?) {
         this.name = name;
         this.matrix = matrix;
         this.title = title || "";
         this.url = url;
-        this.heading = heading ? heading : new Axis(new Map());
-        this.stub = stub ? stub : new Axis(new Map());
     }
 
     add_heading(name:string, headers:Header[]) {
@@ -105,8 +113,11 @@ class Table {
         return this.filter_headings(this.stub)
     };
 
-    size() {
-        return this.heading.size * this.stub.size;
+    calculate_table () {
+        let {heading, stub, size} = get_table(this.heading.headings.values(), this.stub.headings.values());
+        this.size = size;
+        this.heading.set_shape(heading.size, heading.hops, heading.loop, heading.hop);
+        this.stub.set_shape(stub.size, stub.hops, stub.loop, stub.hop);
     }
 }
 
@@ -128,6 +139,9 @@ function create_table(data:Dataset):Table {
      transforms to:
      Axis.headings = {one: [Header(a), Header(b), Header(c)], two: ...}
      Using ES6 ordered map to keep heading order intact
+
+     Axis ->
+        size, hops, loop, hop <- get_table(headings.values, stub.values)
      */
 
 
@@ -140,6 +154,8 @@ function create_table(data:Dataset):Table {
     for (let heading of data.stub) {
         table.add_stub(heading, data.levels[heading].map(header => new Header(header)));
     }
+
+    table.calculate_table();
 
     return table;
 }
