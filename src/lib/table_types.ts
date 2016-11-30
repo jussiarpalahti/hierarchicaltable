@@ -6,6 +6,31 @@ Data model:
         -> Axis
             -> Map Heading: [Header]
 
+Process is as follows:
+    from PX data to Table structure:
+        heading: [one, two, three]
+        levels: {one: [a,b,c], two:[d,e,f], three: ...}
+        transforms to:
+        Axis.headings = {one: [Header(a), Header(b), Header(c)], two: ...}
+        Using ES6 ordered map to keep heading order intact
+
+    Table calculations with the new structure:
+        Axis ->
+            size, hops, loop, hop <- get_table(headings.values, stub.values)
+        Table ->
+            get filtered headers <-
+                for each heading in headings <-
+                    for each header in heading <-
+                        return header if show is true
+            get_matrix_mask <-
+                for each header calculate its place in its heading with its hop
+                then make a list of values from union of all values (using a set)
+                loop all header lists for *filtered* headers and use its index and heading's hop
+                repeat for both axes
+            request matrix data or return the query args for external request
+
+    Table should be ready at this stage for rendering
+
  */
 
 class Header {
