@@ -4,7 +4,8 @@
 Data model:
     Table
         -> Axis
-            -> Map Heading: [Header]
+            -> Headings:Map
+                -> Heading: [Header]
 
 Process is as follows:
     from PX data to Table structure:
@@ -47,17 +48,28 @@ class Header {
     }
 }
 
+
+class Heading {
+    name:string;
+    hop:number;
+
+    constructor(name:string) {
+        this.name = name;
+    }
+}
+
 // TODO: What's the type for empty map?
-type THeading = Map<string, [Header]> | Map<{},{}>;
+type THeadingMap = Map<Heading, [Header]> | Map<{},{}>;
+
 
 class Axis {
-    headings:THeading;
+    headings:THeadingMap;
     size:number;
     hops:number[];
     loop:number[];
     hop:Function[];
 
-    constructor(headings:THeading) {
+    constructor(headings:THeadingMap) {
         this.headings = headings;
     }
 
@@ -67,6 +79,7 @@ class Axis {
         this.loop = loop;
         this.hop = hop;
     }
+
 }
 
 class Table {
@@ -85,12 +98,12 @@ class Table {
         this.url = url;
     }
 
-    add_heading(name:string, headers:Header[]) {
-        this.heading.headings.set(name, headers);
+    add_heading(heading:Heading, headers:Header[]) {
+        this.heading.headings.set(heading, headers);
     }
 
-    add_stub(name:string, headers:Header[]) {
-        this.stub.headings.set(name, headers);
+    add_stub(heading:Heading, headers:Header[]) {
+        this.stub.headings.set(heading, headers);
     }
 
     filter_headings(heading):Header[][] {
@@ -118,6 +131,12 @@ class Table {
         this.size = size;
         this.heading.set_shape(heading.size, heading.hops, heading.loop, heading.hop);
         this.stub.set_shape(stub.size, stub.hops, stub.loop, stub.hop);
+    }
+
+    calculate_matrix_mask() {
+
+        let heading_mask = [];
+
     }
 }
 
@@ -148,11 +167,11 @@ function create_table(data:Dataset):Table {
     let table = new Table(data.name, data.matrix, data.url, data.title);
 
     for (let heading of data.heading) {
-        table.add_heading(heading, data.levels[heading].map(header => new Header(header)));
+        table.add_heading(new Heading(heading), data.levels[heading].map(header => new Header(header)));
     }
 
     for (let heading of data.stub) {
-        table.add_stub(heading, data.levels[heading].map(header => new Header(header)));
+        table.add_stub(new Heading(heading), data.levels[heading].map(header => new Header(header)));
     }
 
     table.calculate_table();

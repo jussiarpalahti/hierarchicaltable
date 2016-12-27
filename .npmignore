@@ -1,3 +1,5 @@
 node_modules/
 typings/
 src/
+hierarchicaltable/dist/
+hierarchicaltable/node_modules/
