@@ -5,8 +5,11 @@
   "main": "dist/index.js",
   "typings": "./dist/index",
   "scripts": {
-    "pretest": "tsc test/*test.tsx --module commonjs --jsx react",
-    "test": "mocha",
+    "2pretest": "tsc test/*test.tsx --module commonjs --jsx react",
+    "2test": "mocha",
+    "2autotest": "supervisor -q -n exit -x mocha -- -b",
+    "test": "mocha --opts mocha.opts",
+    "test:auto": "mocha --opts mocha.opts --watch",
     "typings": "typings",
     "tsc": "tsc",
     "cbuild": "cbuild",
@@ -44,11 +47,17 @@
     "typings": "^1.5.0"
   },
   "devDependencies": {
+    "@types/chai": "^3.4.34",
+    "@types/enzyme": "^2.5.39",
+    "@types/lodash": "^4.14.44",
+    "@types/mocha": "^2.2.35",
+    "@types/react-addons-test-utils": "^0.14.15",
     "cbuild": "^0.1.1",
     "chai": "^3.5.0",
     "enzyme": "^2.4.1",
     "mocha": "^3.0.2",
     "react-addons-test-utils": "^15.3.0",
+    "ts-node": "^1.7.3",
     "typings": "^1.3.2"
   }
 }

@@ -1,12 +1,8 @@
 {
   "dependencies": {},
   "globalDependencies": {
-    "chai": "registry:dt/chai#3.4.0+20160601211834",
-    "enzyme": "registry:dt/enzyme#2.4.1+20160709041153",
     "es6-collections": "registry:dt/es6-collections#0.5.1+20160316155526",
     "lodash": "registry:dt/lodash#4.14.0+20160817155621",
-    "mocha": "registry:dt/mocha#2.2.5+20160720003353",
-    "node": "registry:dt/node#6.0.0+20160817204926",
-    "react-addons-test-utils": "registry:dt/react-addons-test-utils#0.14.0+20160427035638"
+    "node": "registry:dt/node#6.0.0+20160817204926"
   }
 }

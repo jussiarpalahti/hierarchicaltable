@@ -1,11 +1,11 @@
-/// <reference path="../typings/index.d.ts" />
+// <reference path="../typings/index.d.ts" />
 
 import * as React from 'react';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
 import * as _ from 'lodash';
 
-import {ManualTable} from '../src/ManualTable';
+// import {ManualTable} from '../src/ManualTable';
 import {get_matrix_mask, get_table, Selections} from "../src/lib/table";
 import {extable} from './extable'
 
@@ -23,8 +23,8 @@ import {extable} from './extable'
 //     });
 // });
 
-describe('Getting mask', () => {
-    it('gets a mask for selections', () => {
+describe('Getting mask?', () => {
+    it('gets a mask for selections..', () => {
 
         let stub = [
             [1,2,3],
