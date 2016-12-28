@@ -7,11 +7,20 @@ export class Header {
     code: string;
     selected: boolean;
 
-    constructor (name, code?, selected=false) {
+    constructor (name, code=null, selected=false) {
         this.name = name;
         this.code = code;
         this.selected = selected;
     }
+
+    select () {
+        this.selected = true;
+    }
+
+    deselect () {
+        this.selected = false;
+    }
+
 }
 
 // Heading is a list of all header identifiers for a particular column or row axis
@@ -63,9 +72,9 @@ function create_header_hopper(headers: Header[], hop: number, limit: number): Fu
 
      */
 
-    var index = 0;
-    var pos = 0;
-    var headers_size = headers.length;
+    let index = 0;
+    let pos = 0;
+    let headers_size = headers.length;
 
     return function header_hopper(reset:boolean): Header {
 
@@ -75,7 +84,7 @@ function create_header_hopper(headers: Header[], hop: number, limit: number): Fu
             return;
         }
 
-        var header;
+        let header;
 
         if (pos >= limit) {
             // cell position advanced beyond limit
@@ -132,7 +141,7 @@ function get_axis_shape (headers: Headers): TableAxis {
 
     // Full size is accumulated size below last level times its own size
     let last = headers[headers.length - 1];
-    var size:number = ret * last.length;
+    let size:number = ret * last.length;
     headers.reverse();
     return {
         size: size,
@@ -191,26 +200,25 @@ export function get_preview_table(table: Table, size?: number): ITable {
     table.table.heading.hop.forEach((hopper) => hopper(true));
     table.table.stub.hop.forEach((hopper) => hopper(true));
 
-    let heading = Array.apply(null, Array(table.table.heading.headers.length)).map((_, i) => []);
     for (let index=0; index < size; index++) {
         table.table.heading.hop.forEach((hopper, pos) => {
             let header = hopper();
-            if (header && heading[pos].indexOf(header) === -1) {
-                heading[pos].push(header);
+            if (header) {
+                header.select();
             }
         });
     }
 
-    let stub = Array.apply(null, Array(table.table.stub.headers.length)).map((_, i) => []);
+
     for (let index=0; index < size; index++) {
         table.table.stub.hop.map((hopper, pos) => {
             let header = hopper();
-            if (header && stub[pos].indexOf(header) === -1) {
-                stub[pos].push(header);
+            if (header) {
+                header.select();
             }
         });
     }
-    return get_table(heading, stub, table.base);
+    return get_table(table.selected_heading(), table.selected_stub(), table.base);
 }
 
 export function transform_table(dset:Dataset, selection?): {heading: Headers, stub: Headers} {
