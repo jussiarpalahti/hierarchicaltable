@@ -16,7 +16,8 @@
     "bundle": "cbuild -d -v -m systemjs-hot-reloader -o dist/bundle.js -C config-npm.js",
     "bundle-reloader": "cbuild -d -v -s node_modules/systemjs-hot-reloader/hot-reloader.js -o reloader-bundle.js -C config-reloader.js",
     "prepublish": "typings install && tsc && npm run bundle",
-    "start": "NODE_ENV=development node server/server.js"
+    "start": "NODE_ENV=development node server/server.js",
+    "tsn": "ts-node"
   },
   "repository": {
     "type": "git",

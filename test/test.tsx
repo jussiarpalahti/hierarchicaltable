@@ -6,8 +6,9 @@ import { expect } from 'chai';
 import * as _ from 'lodash';
 
 // import {ManualTable} from '../src/ManualTable';
-import {get_matrix_mask, get_table, Selections} from "../src/lib/table";
+import {get_matrix_mask, get_table, Selections, Table} from "../src/lib/table";
 import {extable} from './extable'
+import {small_dataset} from './fixtures';
 
 // describe('<Table />', () => {
 //     it('renders a div o stuffing...', () => {
@@ -23,7 +24,7 @@ import {extable} from './extable'
 //     });
 // });
 
-describe('Getting mask?', () => {
+describe('Getting mask', () => {
     it('gets a mask for selections..', () => {
 
         let stub = [
@@ -65,4 +66,12 @@ describe('Getting mask?', () => {
         expect(mask.stub.length).to.equal(4);
 
     });
+});
+
+describe('Creating table', () => {
+
+    it('makes a table', () => {
+       let new_table = new Table(small_dataset);
+       console.log("I'm tabling", new_table.base.matrix);
+   });
 });
