@@ -197,11 +197,11 @@ export function get_preview_table(table: Table, size?: number): ITable {
     if (!size) size = 10;
 
     // TODO: make hop creator a function factory factory
-    table.table.heading.hop.forEach((hopper) => hopper(true));
-    table.table.stub.hop.forEach((hopper) => hopper(true));
+    table.view.heading.hop.forEach((hopper) => hopper(true));
+    table.view.stub.hop.forEach((hopper) => hopper(true));
 
     for (let index=0; index < size; index++) {
-        table.table.heading.hop.forEach((hopper, pos) => {
+        table.view.heading.hop.forEach((hopper, pos) => {
             let header = hopper();
             if (header) {
                 header.select();
@@ -211,7 +211,7 @@ export function get_preview_table(table: Table, size?: number): ITable {
 
 
     for (let index=0; index < size; index++) {
-        table.table.stub.hop.map((hopper, pos) => {
+        table.view.stub.hop.map((hopper, pos) => {
             let header = hopper();
             if (header) {
                 header.select();
@@ -270,11 +270,10 @@ export function get_matrix_mask(selections:Selections, table:ITable):{heading: n
 
 export class Table {
     base: any;
-    selection: any;
     headings: Headers;
     stubs: Headers;
     matrix: Matrix;
-    table: any;
+    view: any;
 
     constructor (base: Dataset, preview=true) {
         this.base = base;
@@ -291,35 +290,43 @@ export class Table {
         }
         this.stubs = stub;
 
-        this.table = get_table(this.headings, this.stubs);
+        this.view = get_table(this.headings, this.stubs);
 
-        if (preview) this.table = get_preview_table(this);
+        if (preview) this.view = get_preview_table(this);
 
-    //    headings, stubs = get_table(transform table(base))
-        // ?? necessary? just use regular table base with levels map and heading/stub keynames in lists
-    //    create Header objects into ordered map or list of heading & stub
-    //    if preview: set_selections(get_preview_table(this))
-    //    requires changing preview generator to use this object instead of lower level data
-    //    this sets visible headers by calling Header.select() by previewer's calculation
     }
 
     selected_stub () {
+        // selected headers on stub axis
         return this.headings.map((heading) => {
             return heading.filter((header) => header.selected);
         });
     }
 
     selected_heading () {
+        // selected headers on heading axis
         return this.stubs.map((heading) => {
             return heading.filter((header) => header.selected);
         });
     }
 
-    matrix_mask () {
+    update_view () {
+        // call this when selection status of one or more headers has changed
+        this.view = get_table(this.selected_heading(), this.selected_stub(), this.base);
+    }
 
+    select_header (header:Header) {
+        // does header select with immediate update, otherwise use header.select directly
+        header.select();
+        this.view = get_table(this.selected_heading(), this.selected_stub(), this.base);
+    }
+
+    matrix_mask () {
+    // return list of list of row and column positions in matrix for selected cells
     }
 
     set_matrix (matrix:Matrix) {
+        // set matrix to given data, meant to be called with matrix data corresponding to selection mask
         this.matrix = matrix;
     }
 
