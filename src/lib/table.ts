@@ -2,7 +2,17 @@
 import * as _ from 'lodash';
 
 // Header is for one row or column identifier
-export type Header = string | number;
+export class Header {
+    name: string;
+    code: string;
+    selected: boolean;
+
+    constructor (name, code, selected=false) {
+        this.name = name;
+        this.code = code;
+        this.selected = selected;
+    }
+}
 
 // Heading is a list of all header identifiers for a particular column or row axis
 export type Heading = Header[]
@@ -245,4 +255,39 @@ export function get_matrix_mask(selections:Selections, table:ITable):{heading: n
     });
 
     return {heading: _.uniq(_.flatten(heading_mask)), stub: _.uniq(_.flatten(stub_mask))};
+}
+
+export class Table {
+    base: any;
+    selection: any;
+    headings: Heading;
+    stubs: Heading;
+    matrix: [string[]];
+
+    constructor (base: any, preview=true) {
+        this.base = base;
+    //    headings, stubs = get_table(transform table(base))
+        // ?? necessary? just use regular table base with levels map and heading/stub keynames in lists
+    //    create Header objects into ordered map or list of heading & stub
+    //    if preview: set_selections(get_preview_table(this))
+    //    requires changing preview generator to use this object instead of lower level data
+    //    this sets visible headers by calling Header.select() by previewer's calculation
+    }
+
+    selected_stub () {
+
+    }
+
+    selected_heading () {
+
+    }
+
+    matrix_mask () {
+
+    }
+
+    set_matrix () {
+
+    }
+
 }
