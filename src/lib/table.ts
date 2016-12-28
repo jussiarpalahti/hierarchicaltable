@@ -7,7 +7,7 @@ export class Header {
     code: string;
     selected: boolean;
 
-    constructor (name, code, selected=false) {
+    constructor (name, code?, selected=false) {
         this.name = name;
         this.code = code;
         this.selected = selected;
@@ -33,6 +33,9 @@ export interface Selections {
     heading: {[key:string]: number[]}
 }
 
+export type Cell = string|number;
+export type Matrix = Cell[][];
+
 export interface Dataset {
     stub: string[],
     heading: string[],
@@ -40,7 +43,7 @@ export interface Dataset {
     name: string,
     title: string,
     url: string,
-    matrix: [string[]]
+    matrix: Matrix
 }
 
 export interface ITable {
@@ -260,12 +263,25 @@ export function get_matrix_mask(selections:Selections, table:ITable):{heading: n
 export class Table {
     base: any;
     selection: any;
-    headings: Heading;
-    stubs: Heading;
-    matrix: [string[]];
+    headings: Headers;
+    stubs: Headers;
+    matrix: Matrix;
 
-    constructor (base: any, preview=true) {
+    constructor (base: Dataset, preview=true) {
         this.base = base;
+        let levels = base.levels;
+        let heading = [];
+        for (let headings of base.heading) {
+            heading.push(levels[headings].map(header => new Header(header)));
+        }
+        this.headings = heading;
+
+        let stub = [];
+        for (let headings of base.stub) {
+            stub.push(levels[headings].map(header => new Header(header)));
+        }
+        this.stubs = stub;
+
     //    headings, stubs = get_table(transform table(base))
         // ?? necessary? just use regular table base with levels map and heading/stub keynames in lists
     //    create Header objects into ordered map or list of heading & stub
@@ -275,19 +291,23 @@ export class Table {
     }
 
     selected_stub () {
-
+        return this.headings.map((heading) => {
+            return heading.filter((header) => header.selected);
+        });
     }
 
     selected_heading () {
-
+        return this.stubs.map((heading) => {
+            return heading.filter((header) => header.selected);
+        });
     }
 
     matrix_mask () {
 
     }
 
-    set_matrix () {
-
+    set_matrix (matrix:Matrix) {
+        this.matrix = matrix;
     }
 
 }
