@@ -180,7 +180,7 @@ export function get_table (heading: any, stub: any, dataset?:Dataset): ITable {
 }
 
 
-export function get_preview_table(table: ITable, size?: number): ITable {
+export function get_preview_table(table: Table, size?: number): ITable {
     /*
 
      */
@@ -188,12 +188,12 @@ export function get_preview_table(table: ITable, size?: number): ITable {
     if (!size) size = 10;
 
     // TODO: make hop creator a function factory factory
-    table.heading.hop.forEach((hopper) => hopper(true));
-    table.stub.hop.forEach((hopper) => hopper(true));
+    table.table.heading.hop.forEach((hopper) => hopper(true));
+    table.table.stub.hop.forEach((hopper) => hopper(true));
 
-    let heading = Array.apply(null, Array(table.heading.headers.length)).map((_, i) => []);
+    let heading = Array.apply(null, Array(table.table.heading.headers.length)).map((_, i) => []);
     for (let index=0; index < size; index++) {
-        table.heading.hop.forEach((hopper, pos) => {
+        table.table.heading.hop.forEach((hopper, pos) => {
             let header = hopper();
             if (header && heading[pos].indexOf(header) === -1) {
                 heading[pos].push(header);
@@ -201,16 +201,16 @@ export function get_preview_table(table: ITable, size?: number): ITable {
         });
     }
 
-    let stub = Array.apply(null, Array(table.stub.headers.length)).map((_, i) => []);
+    let stub = Array.apply(null, Array(table.table.stub.headers.length)).map((_, i) => []);
     for (let index=0; index < size; index++) {
-        table.stub.hop.map((hopper, pos) => {
+        table.table.stub.hop.map((hopper, pos) => {
             let header = hopper();
             if (header && stub[pos].indexOf(header) === -1) {
                 stub[pos].push(header);
             }
         });
     }
-    return get_table(heading, stub, table.dataset);
+    return get_table(heading, stub, table.base);
 }
 
 export function transform_table(dset:Dataset, selection?): {heading: Headers, stub: Headers} {
@@ -266,6 +266,7 @@ export class Table {
     headings: Headers;
     stubs: Headers;
     matrix: Matrix;
+    table: any;
 
     constructor (base: Dataset, preview=true) {
         this.base = base;
@@ -281,6 +282,10 @@ export class Table {
             stub.push(levels[headings].map(header => new Header(header)));
         }
         this.stubs = stub;
+
+        this.table = get_table(this.headings, this.stubs);
+
+        if (preview) this.table = get_preview_table(this);
 
     //    headings, stubs = get_table(transform table(base))
         // ?? necessary? just use regular table base with levels map and heading/stub keynames in lists

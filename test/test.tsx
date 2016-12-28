@@ -4,6 +4,7 @@ import * as React from 'react';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
 import * as _ from 'lodash';
+import * as util from 'util';
 
 // import {ManualTable} from '../src/ManualTable';
 import {get_matrix_mask, get_table, Selections, Table} from "../src/lib/table";
@@ -68,10 +69,11 @@ describe('Getting mask', () => {
     });
 });
 
-describe('Creating table', () => {
+const dir = (o) => util.inspect(o, {depth: null});
 
-    it('makes a table', () => {
+describe('Creating table', () => {
+    it('makes a table!', () => {
        let new_table = new Table(small_dataset);
-       console.log("I'm tabling", new_table.base.matrix);
+       console.log("I'm tables", dir(new_table.table));
    });
 });

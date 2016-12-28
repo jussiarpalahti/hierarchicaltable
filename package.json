@@ -52,6 +52,7 @@
     "@types/enzyme": "^2.5.39",
     "@types/lodash": "^4.14.44",
     "@types/mocha": "^2.2.35",
+    "@types/node": "^6.0.54",
     "@types/react-addons-test-utils": "^0.14.15",
     "cbuild": "^0.1.1",
     "chai": "^3.5.0",
