@@ -269,11 +269,11 @@ export function get_matrix_mask(selections:Selections, table:ITable):{heading: n
 }
 
 export class Table {
-    base: any;
+    base: Dataset;
     headings: Headers;
     stubs: Headers;
     matrix: Matrix;
-    view: any;
+    view: ITable;
 
     constructor (base: Dataset, preview=true) {
         this.base = base;

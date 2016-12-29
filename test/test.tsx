@@ -72,8 +72,30 @@ describe('Getting mask', () => {
 const dir = (o) => util.inspect(o, {depth: null});
 
 describe('Creating table', () => {
-    it('makes a table!', () => {
+
+    it('!makes a table', () => {
        let new_table = new Table(small_dataset);
-       console.log("I'm tables", dir(new_table.table));
+       console.log("I'm tables", dir(new_table.view));
    });
+
+    it('check hoppers', () => {
+        let new_table = new Table(small_dataset);
+        let result = _.range(new_table.view.stub.size).map(() => {
+            return new_table.view.stub.hop.map(hopper => hopper());
+        });
+        expect(result[0][0].name).to.equal('x1');
+        expect(result[0][1].name).to.equal('y1');
+        expect(result[1][0]).to.equal(null);
+        expect(result[1][1].name).to.equal('y2');
+
+    });
+
+    it('check selection', () => {
+
+    });
+
+    it('check table layout', () => {
+
+    });
+
 });
