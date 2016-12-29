@@ -1,16 +1,15 @@
 
 import * as React from 'react';
 
-import {HierarchicalTable} from './table';
-import {Dataset, ITable, get_table, get_preview_table, transform_table} from "./lib/table";
+import {MainTable} from './table';
+import {Dataset, Table, get_table, get_preview_table, transform_table} from "./lib/table";
 
-export {Dataset, ITable, get_preview_table, get_table, transform_table} from './lib/table'
-import {observable, computed, action, toJS, runInAction, transaction, asMap, ObservableMap} from 'mobx';
+export {Dataset, Table, get_preview_table, get_table, transform_table} from './lib/table'
 
-export class Table extends React.Component<{data: ITable}, {}> {
+export class HierarchicalTable extends React.Component<{table: Table}, {}> {
     render() {
         return (<div>
-            <HierarchicalTable table={this.props.data} matrix={this.props.data.dataset.matrix} />
+            <MainTable table={this.props.table} matrix={this.props.table.matrix} />
         </div>);
     }
 }

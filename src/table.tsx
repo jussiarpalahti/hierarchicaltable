@@ -94,7 +94,7 @@ class TableBody extends React.Component<TableProps, {}> {
 }
 
 
-export class HierarchicalTable extends React.Component<{table: any, matrix: any}, {}> {
+export class MainTable extends React.Component<{table: any, matrix: any}, {}> {
 
     clicker(e) {
         // TODO: check the table data selection logic
