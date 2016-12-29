@@ -321,6 +321,12 @@ export class Table {
         this.view = get_table(this.selected_heading(), this.selected_stub(), this.base);
     }
 
+    deselect_header (header:Header) {
+        // does header select with immediate update, otherwise use header.select directly
+        header.deselect();
+        this.view = get_table(this.selected_heading(), this.selected_stub(), this.base);
+    }
+
     matrix_mask () {
     // return list of list of row and column positions in matrix for selected cells
     }

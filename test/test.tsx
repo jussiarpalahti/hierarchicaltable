@@ -71,7 +71,7 @@ const dir = (o) => util.inspect(o, {depth: null});
 
 describe('Creating table', () => {
 
-    it('!makes a table', () => {
+    it('makes a table', () => {
        let new_table = new Table(small_dataset);
    });
 
@@ -100,6 +100,13 @@ describe('Creating table', () => {
         expect(new_table.view.heading.headers[1][0].name).to.equal('y1');
         expect(new_table.view.stub.headers[0][0].name).to.equal('a1');
         expect(new_table.view.stub.headers[0][2].name).to.equal('a3');
+
+        let second_headings_header = new_table.headings[0][1];
+        new_table.select_header(first_headings_header);
+        expect(new_table.view.heading.headers[0][0].name).to.equal('x1');
+        new_table.deselect_header(second_headings_header);
+        expect(new_table.view.heading.headers[0].length).to.equal(1);
+
     });
 
     it('check table layout', () => {
