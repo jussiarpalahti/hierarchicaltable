@@ -298,14 +298,14 @@ export class Table {
 
     selected_stub () {
         // selected headers on stub axis
-        return this.headings.map((heading) => {
+        return this.stubs.map((heading) => {
             return heading.filter((header) => header.selected);
         });
     }
 
     selected_heading () {
         // selected headers on heading axis
-        return this.stubs.map((heading) => {
+        return this.headings.map((heading) => {
             return heading.filter((header) => header.selected);
         });
     }
