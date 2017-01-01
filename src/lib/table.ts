@@ -277,6 +277,7 @@ export class Table {
 
     constructor (base: Dataset, preview=true) {
         this.base = base;
+        this.matrix = base.matrix;
         let levels = base.levels;
         let heading = [];
         for (let headings of base.heading) {

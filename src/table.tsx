@@ -1,47 +1,47 @@
 import * as React from "react";
+import {Table} from './lib/table';
 
 interface Props {
     [name: string]: string
 }
 
 interface TableProps {
-    table: any;
-    matrix?: any;
+    table: Table;
     selector?: Function
 }
 
-function get_dimensions(table, matrix): any {
+function get_dimensions(table:Table): {height:number, width:number} {
     /*
      Available data determines table size
      */
-    let width = matrix[0].length < table.heading.size ? matrix[0].length : table.heading.size;
-    let height = matrix.length < table.stub.size ? matrix.length : table.stub.size;
+    let width = table.matrix[0].length < table.view.heading.size ? table.matrix[0].length : table.view.heading.size;
+    let height = table.matrix.length < table.view.stub.size ? table.matrix.length : table.view.stub.size;
 
     return {height, width};
 }
 
 class TableHead extends React.Component<TableProps, {}> {
     render () {
-        let {table, matrix} = this.props;
+        let {table} = this.props;
 
-        let {_, width} = get_dimensions(table, matrix);
+        let {height, width} = get_dimensions(table);
 
-        let resp = table.heading.hop.map(
+        let resp = table.view.heading.hop.map(
             (hopper, index) => {
                 let row = [];
                 for (let i=0; i < width; i++) {
                     let header = hopper();
                     if (header) {
                         row.push(
-                            <th key={"head" + index + i} data-id={["heading", i]} colSpan={table.heading.hops[index]}>{header}</th>)
+                            <th key={"head" + index + i} data-id={["heading", i]} colSpan={table.view.heading.hops[index]}>{header.name}</th>)
                     }
                 }
                 if (index == 0) {
                     return <tr key={index}>
                         <th
                             className="centered"
-                            colSpan={table.stub.headers.length}
-                            rowSpan={table.heading.headers.length}>
+                            colSpan={table.view.stub.headers.length}
+                            rowSpan={table.view.heading.headers.length}>
 
                         </th>
                         {row}
@@ -60,7 +60,7 @@ function get_row_headers (stub, row_idx){
         let header = hopper();
         if (header) {
             resp.push(
-                <th data-id={["stub", row_idx]} key={"header" + index} rowSpan={stub.hops[index]}>{header}</th>
+                <th data-id={["stub", row_idx]} key={"header" + index} rowSpan={stub.hops[index]}>{header.name}</th>
             );
         }
     });
@@ -70,20 +70,20 @@ function get_row_headers (stub, row_idx){
 
 class TableBody extends React.Component<TableProps, {}> {
     render () {
-        let {table, matrix} = this.props;
+        let {table} = this.props;
         let resp = [];
 
-        let {height, width} = get_dimensions(table, matrix);
+        let {height, width} = get_dimensions(table);
 
         for (let row=0; row < height; row++) {
             let data = [];
             for (let col=0; col < width; col++) {
                 data.push(
-                    <td key={"heading" + row + col}>{matrix[row][col]}</td>
+                    <td key={"heading" + row + col}>{table.matrix[row][col]}</td>
                 );
             }
             resp.push(<tr key={row}>
-                {get_row_headers(table.stub, row)}
+                {get_row_headers(table.view.stub, row)}
                 {data}
             </tr>);
         }
@@ -94,7 +94,7 @@ class TableBody extends React.Component<TableProps, {}> {
 }
 
 
-export class MainTable extends React.Component<{table: any, matrix: any}, {}> {
+export class MainTable extends React.Component<{table: Table}, {}> {
 
     clicker(e) {
         // TODO: check the table data selection logic
@@ -102,11 +102,11 @@ export class MainTable extends React.Component<{table: any, matrix: any}, {}> {
     }
 
     render() {
-        let {table, matrix} = this.props;
+        let {table} = this.props;
         return <div id="datatable">
             <table className="pure-table pure-table-bordered" onClick={this.clicker.bind(this)}>
-                <TableHead table={table} matrix={matrix} />
-                <TableBody table={table} matrix={matrix} />
+                <TableHead table={table} />
+                <TableBody table={table} />
             </table>
         </div>
     }
