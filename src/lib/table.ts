@@ -7,7 +7,8 @@ export class Header {
     code: string;
     selected: boolean;
 
-    constructor (name, code=null, selected=false) {
+    constructor (header) {
+        let {name, code, selected} = header;
         this.name = name;
         this.code = code;
         this.selected = selected;
@@ -329,6 +330,7 @@ export class Table {
     }
 
     matrix_mask () {
+    //    TODO: Implement me!
     // return list of list of row and column positions in matrix for selected cells
     }
 
