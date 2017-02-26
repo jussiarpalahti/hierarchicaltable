@@ -25,7 +25,13 @@ export class Header {
 }
 
 // Heading is a list of all header identifiers for a particular column or row axis
-export type Heading = Header[]
+
+export class Heading {
+    name:string;
+    headers: Header[];
+    index?:number;
+    hop?:number;
+}
 
 // Headers is a list of lists containing headings for all the column and row heading levels
 export type Headers = Heading[];
@@ -280,7 +286,8 @@ export class Table {
         this.base = base;
         this.matrix = base.matrix;
         let levels = base.levels;
-        let heading = [];
+        let heading = {string: Heading};
+        // TODO: refactor for Heading class
         for (let headings of base.heading) {
             heading.push(levels[headings].map(header => new Header(header)));
         }
@@ -298,40 +305,45 @@ export class Table {
 
     }
 
-    selected_stub () {
+    selected_stub ():Headers {
         // selected headers on stub axis
         return this.stubs.map((heading) => {
             return heading.filter((header) => header.selected);
         });
     }
 
-    selected_heading () {
+    selected_heading ():Headers {
         // selected headers on heading axis
         return this.headings.map((heading) => {
             return heading.filter((header) => header.selected);
         });
     }
 
-    update_view () {
+    update_view ():void {
         // call this when selection status of one or more headers has changed
         this.view = get_table(this.selected_heading(), this.selected_stub(), this.base);
     }
 
-    select_header (header:Header) {
+    select_header (header:Header):void {
         // does header select with immediate update, otherwise use header.select directly
         header.select();
         this.view = get_table(this.selected_heading(), this.selected_stub(), this.base);
     }
 
-    deselect_header (header:Header) {
+    deselect_header (header:Header):void {
         // does header select with immediate update, otherwise use header.select directly
         header.deselect();
         this.view = get_table(this.selected_heading(), this.selected_stub(), this.base);
     }
 
-    matrix_mask () {
+    matrix_mask ():[number[], number[]] {
     //    TODO: Implement me!
     // return list of list of row and column positions in matrix for selected cells
+        const stub_map = {};
+        this.stubs.map((heading) => {
+            // stub_map[heading] = heading.map((header, index) => header.selected ? index : null);
+        });
+        return [[1, 2], [2]];
     }
 
     set_matrix (matrix:Matrix) {
