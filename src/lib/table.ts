@@ -28,9 +28,13 @@ export class Header {
 
 export class Heading {
     name:string;
-    headers: Header[];
+    headers?: Header[];
     index?:number;
     hop?:number;
+
+    constructor (name) {
+        this.name = name;
+    }
 }
 
 // Headers is a list of lists containing headings for all the column and row heading levels
@@ -116,7 +120,7 @@ function create_header_hopper(headers: Header[], hop: number, limit: number): Fu
     }
 }
 
-function get_axis_shape (headers: Headers): TableAxis {
+function get_axis_shape (headings: Heading[]): TableAxis {
     /*
 
      Calculate table shape from list of header lists:
@@ -128,8 +132,8 @@ function get_axis_shape (headers: Headers): TableAxis {
     let res:number[] = [];
 
     // Bottom level starts first in size accumulation
-    headers.reverse();
-    let ret = headers.reduce(
+    headings.reverse();
+    let ret = headings.reduce(
         function reducer (prev:number, next, index, all) {
             let acc;
 
@@ -139,7 +143,7 @@ function get_axis_shape (headers: Headers): TableAxis {
                 return 1;
             } else {
                 // Levels other than bottom have cell size accumulated from previous levels' sizes
-                acc = all[index - 1].length * prev;
+                acc = all[index - 1].headers.length * prev;
                 res.push(acc);
                 return acc;
             }
@@ -147,9 +151,9 @@ function get_axis_shape (headers: Headers): TableAxis {
         null);
 
     // Full size is accumulated size below last level times its own size
-    let last = headers[headers.length - 1];
-    let size:number = ret * last.length;
-    headers.reverse();
+    let last = headings[headings.length - 1];
+    let size:number = ret * last.headers.length;
+    headings.reverse();
     return {
         size: size,
         // repeat loop for level's headers is inverse of its hop size
@@ -159,38 +163,38 @@ function get_axis_shape (headers: Headers): TableAxis {
 }
 
 
-export function get_table (heading: any, stub: any, dataset?:Dataset): ITable {
+export function get_table (headings: Heading[], stubs: Heading[], dataset?:Dataset): ITable {
     /*
     Generates a ITable object from headers
      */
-    let headings = get_axis_shape(heading);
-    headings.headers = heading;
-    headings.hop = heading.map(
-        (headers, index) => create_header_hopper(
-                headers,
-                headings.hops[index],
-                headings.size));
+    let heading_map = get_axis_shape(headings);
+    heading_map.headers = headings;
+    heading_map.hop = headings.map(
+        (heading, index) => create_header_hopper(
+                heading.headers,
+                heading_map.hops[index],
+                heading_map.size));
 
-    let stubs = get_axis_shape(stub);
-    stubs.headers = stub;
-    stubs.hop = stub.map(
-        (headers, index) => create_header_hopper(
-            headers,
-            stubs.hops[index],
-            stubs.size));
+    let stub_map = get_axis_shape(stubs);
+    stub_map.headers = stubs;
+    stub_map.hop = stubs.map(
+        (heading, index) => create_header_hopper(
+            heading.headers,
+            stub_map.hops[index],
+            stub_map.size));
 
     if (dataset) {
         return {
             dataset: dataset,
-            stub: stubs,
-            heading: headings,
-            size: stubs.size * headings.size
+            stub: stub_map,
+            heading: heading_map,
+            size: stub_map.size * heading_map.size
         };
     } else {
         return {
-            stub: stubs,
-            heading: headings,
-            size: stubs.size * headings.size
+            stub: stub_map,
+            heading: heading_map,
+            size: stub_map.size * heading_map.size
         };
     }
 }
@@ -215,7 +219,6 @@ export function get_preview_table(table: Table, size?: number): ITable {
             }
         });
     }
-
 
     for (let index=0; index < size; index++) {
         table.view.stub.hop.map((hopper, pos) => {
@@ -277,8 +280,8 @@ export function get_matrix_mask(selections:Selections, table:ITable):{heading: n
 
 export class Table {
     base: Dataset;
-    headings: Headers;
-    stubs: Headers;
+    headings: Heading[];
+    stubs: Heading[];
     matrix: Matrix;
     view: ITable;
 
@@ -286,36 +289,39 @@ export class Table {
         this.base = base;
         this.matrix = base.matrix;
         let levels = base.levels;
-        let heading = {string: Heading};
-        // TODO: refactor for Heading class
-        for (let headings of base.heading) {
-            heading.push(levels[headings].map(header => new Header(header)));
+        let headings = [];
+        for (let heading_name of base.heading) {
+            let heading = new Heading(heading_name);
+            heading.headers = levels[heading_name].map(header => new Header(header));
+            headings.push(heading);
         }
-        this.headings = heading;
+        this.headings = headings;
 
-        let stub = [];
-        for (let headings of base.stub) {
-            stub.push(levels[headings].map(header => new Header(header)));
+        let stubs = [];
+        for (let heading_name of base.stub) {
+            let heading = new Heading(heading_name);
+            heading.headers = levels[heading_name].map(header => new Header(header));
+            stubs.push(heading);
         }
-        this.stubs = stub;
+        this.stubs = stubs;
 
         this.view = get_table(this.headings, this.stubs);
 
         if (preview) this.view = get_preview_table(this);
 
     }
-
-    selected_stub ():Headers {
+    // TODO: Refactor for Heading objects, not list of Headings
+    selected_stub ():Heading[] {
         // selected headers on stub axis
         return this.stubs.map((heading) => {
-            return heading.filter((header) => header.selected);
+            return heading.headers.filter((header) => header.selected);
         });
     }
 
-    selected_heading ():Headers {
+    selected_heading ():Headers[] {
         // selected headers on heading axis
         return this.headings.map((heading) => {
-            return heading.filter((header) => header.selected);
+            return heading.headers.filter((header) => header.selected);
         });
     }
 
