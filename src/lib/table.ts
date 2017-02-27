@@ -38,14 +38,15 @@ export class Heading {
 }
 
 // Headers is a list of lists containing headings for all the column and row heading levels
-export type Headers = Heading[];
+export type Headers = Header[];
+export type HeadingList = Headers[];
 
 export interface TableAxis {
     size: number;
     hops: number[];
     loop: number[];
     hop?: Function[],
-    headers?: Headers
+    headers?: HeadingList
 }
 
 export interface Selections {
@@ -120,7 +121,7 @@ function create_header_hopper(headers: Header[], hop: number, limit: number): Fu
     }
 }
 
-function get_axis_shape (headings: Heading[]): TableAxis {
+function get_axis_shape (headings: HeadingList): TableAxis {
     /*
 
      Calculate table shape from list of header lists:
@@ -143,7 +144,7 @@ function get_axis_shape (headings: Heading[]): TableAxis {
                 return 1;
             } else {
                 // Levels other than bottom have cell size accumulated from previous levels' sizes
-                acc = all[index - 1].headers.length * prev;
+                acc = all[index - 1].length * prev;
                 res.push(acc);
                 return acc;
             }
@@ -152,7 +153,7 @@ function get_axis_shape (headings: Heading[]): TableAxis {
 
     // Full size is accumulated size below last level times its own size
     let last = headings[headings.length - 1];
-    let size:number = ret * last.headers.length;
+    let size:number = ret * last.length;
     headings.reverse();
     return {
         size: size,
@@ -163,23 +164,23 @@ function get_axis_shape (headings: Heading[]): TableAxis {
 }
 
 
-export function get_table (headings: Heading[], stubs: Heading[], dataset?:Dataset): ITable {
+export function get_table (heading: HeadingList, stub: HeadingList, dataset?:Dataset): ITable {
     /*
     Generates a ITable object from headers
      */
-    let heading_map = get_axis_shape(headings);
-    heading_map.headers = headings;
-    heading_map.hop = headings.map(
+    let heading_map = get_axis_shape(heading);
+    heading_map.headers = heading;
+    heading_map.hop = heading.map(
         (heading, index) => create_header_hopper(
-                heading.headers,
+                heading,
                 heading_map.hops[index],
                 heading_map.size));
 
-    let stub_map = get_axis_shape(stubs);
-    stub_map.headers = stubs;
-    stub_map.hop = stubs.map(
+    let stub_map = get_axis_shape(stub);
+    stub_map.headers = stub;
+    stub_map.hop = stub.map(
         (heading, index) => create_header_hopper(
-            heading.headers,
+            heading,
             stub_map.hops[index],
             stub_map.size));
 
@@ -305,13 +306,13 @@ export class Table {
         }
         this.stubs = stubs;
 
-        this.view = get_table(this.headings, this.stubs);
+        this.view = get_table(this.headings.map((heading) => heading.headers), this.headings.map((heading) => heading.headers));
 
         if (preview) this.view = get_preview_table(this);
 
     }
     // TODO: Refactor for Heading objects, not list of Headings
-    selected_stub ():Heading[] {
+    selected_stub ():Headers[] {
         // selected headers on stub axis
         return this.stubs.map((heading) => {
             return heading.headers.filter((header) => header.selected);
