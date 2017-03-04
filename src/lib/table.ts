@@ -306,7 +306,9 @@ export class Table {
         }
         this.stubs = stubs;
 
-        this.view = get_table(this.headings.map((heading) => heading.headers), this.headings.map((heading) => heading.headers));
+        this.view = get_table(
+            this.stubs.map((heading) => heading.headers),
+            this.headings.map((heading) => heading.headers));
 
         if (preview) this.view = get_preview_table(this);
 
