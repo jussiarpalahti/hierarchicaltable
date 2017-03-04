@@ -261,27 +261,43 @@ export function transform_table(dset:Dataset, selection?): {heading: Headers, st
 }
 
 export function get_matrix_mask(table:Table):MatrixSelection {
+    /*
+    Each heading's selected headers positions add up to all possible selected cells
+    Through set intersection final selection is common number for all headings all headers
+    */
     let stub_mask = [];
     let heading_mask = [];
 
     table.headings.map((heading, index) => {
-        let hop = table.view.heading.hops[index];
-        heading.headers.forEach((header, index) => {
-            if (header.selected) {
-                let start = hop * index;
-                heading_mask.push(_.range(start, start + hop));
-            }
-        });
+        const hop = table.view.heading.hops[index];
+        const loop = (heading.headers.length * hop) / table.view.heading.size;
+        const offset = 0;
+        let level_mask = [];
+        for (let index = 0; index < loop; index++) {
+            heading.headers.forEach((header, index) => {
+                if (header.selected) {
+                    let start = offset + hop * index;
+                    level_mask.push(_.range(start, start + hop));
+                }
+            });
+        }
+        heading_mask.push(level_mask);
     });
 
     table.stubs.map((heading, index) => {
-        let hop = table.view.stub.hops[index];
-        heading.headers.forEach((header, index) => {
-            if (header.selected) {
-                let start = hop * index;
-                stub_mask.push(_.range(start, start + hop));
-            }
-        });
+        const hop = table.view.stub.hops[index];
+        const loop = (heading.headers.length * hop) / table.view.heading.size;
+        const offset = 0;
+        let level_mask = [];
+        for (let index = 0; index < loop; index++) {
+            heading.headers.forEach((header, index) => {
+                if (header.selected) {
+                    let start = offset + hop * index;
+                    level_mask.push(_.range(start, start + hop));
+                }
+            });
+        }
+        heading_mask.push(level_mask);
     });
 
     // table.stubs.map((stub, index) => {
@@ -292,8 +308,11 @@ export function get_matrix_mask(table:Table):MatrixSelection {
     //     }
     //
     // });
-
-    return {heading: _.uniq(_.flatten(heading_mask)), stub: _.uniq(_.flatten(stub_mask))};
+    console.log("masking", heading_mask, stub_mask);
+    return {
+        heading: _.intersection(heading_mask),
+        stub: _.intersection(stub_mask)
+    };
 }
 
 export class Table {
