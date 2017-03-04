@@ -54,6 +54,11 @@ export interface Selections {
     heading: {[key:string]: number[]}
 }
 
+export interface MatrixSelection {
+    heading: number[];
+    stub: number[];
+}
+
 export type Cell = string|number;
 export type Matrix = Cell[][];
 
@@ -255,26 +260,38 @@ export function transform_table(dset:Dataset, selection?): {heading: Headers, st
     return {heading, stub};
 }
 
-export function get_matrix_mask(selections:Selections, table:ITable):{heading: number[], stub: number[]} {
+export function get_matrix_mask(table:Table):MatrixSelection {
     let stub_mask = [];
     let heading_mask = [];
 
-    table.dataset.heading.map((heading, index) => {
-        let hop = table.heading.hops[index];
-        for (let pos of selections.heading[heading]) {
-            let start = hop * pos;
-            heading_mask.push(_.range(start, start + hop));
-        }
+    table.headings.map((heading, index) => {
+        let hop = table.view.heading.hops[index];
+        heading.headers.forEach((header, index) => {
+            if (header.selected) {
+                let start = hop * index;
+                heading_mask.push(_.range(start, start + hop));
+            }
+        });
     });
 
-    table.dataset.stub.map((stub, index) => {
-        let hop = table.stub.hops[index];
-        for (let pos of selections.stub[stub]) {
-            let start = hop * pos;
-            stub_mask.push(_.range(start, start + hop));
-        }
-
+    table.stubs.map((heading, index) => {
+        let hop = table.view.stub.hops[index];
+        heading.headers.forEach((header, index) => {
+            if (header.selected) {
+                let start = hop * index;
+                stub_mask.push(_.range(start, start + hop));
+            }
+        });
     });
+
+    // table.stubs.map((stub, index) => {
+    //     let hop = table.stub.hops[index];
+    //     for (let pos of selections.stub[stub]) {
+    //         let start = hop * pos;
+    //         stub_mask.push(_.range(start, start + hop));
+    //     }
+    //
+    // });
 
     return {heading: _.uniq(_.flatten(heading_mask)), stub: _.uniq(_.flatten(stub_mask))};
 }
@@ -345,19 +362,15 @@ export class Table {
         this.view = get_table(this.selected_heading(), this.selected_stub(), this.base);
     }
 
-    matrix_mask ():[number[], number[]] {
+    matrix_mask ():MatrixSelection {
     //    TODO: Implement me!
     // return list of list of row and column positions in matrix for selected cells
-        const stub_map = {};
-        this.stubs.map((heading) => {
-            // stub_map[heading] = heading.map((header, index) => header.selected ? index : null);
-        });
-        return [[1, 2], [2]];
+
+        return get_matrix_mask(this);
     }
 
     set_matrix (matrix:Matrix) {
         // set matrix to given data, meant to be called with matrix data corresponding to selection mask
         this.matrix = matrix;
     }
-
 }
