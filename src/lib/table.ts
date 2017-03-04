@@ -214,11 +214,11 @@ export function get_preview_table(table: Table, size?: number): ITable {
     if (!size) size = 10;
 
     // TODO: make hop creator a function factory factory
-    table.view.heading.hop.forEach((hopper) => hopper(true));
-    table.view.stub.hop.forEach((hopper) => hopper(true));
+    table.base_view.heading.hop.forEach((hopper) => hopper(true));
+    table.base_view.stub.hop.forEach((hopper) => hopper(true));
 
     for (let index=0; index < size; index++) {
-        table.view.heading.hop.forEach((hopper, pos) => {
+        table.base_view.heading.hop.forEach((hopper, pos) => {
             let header = hopper();
             if (header) {
                 header.select();
@@ -227,7 +227,7 @@ export function get_preview_table(table: Table, size?: number): ITable {
     }
 
     for (let index=0; index < size; index++) {
-        table.view.stub.hop.map((hopper, pos) => {
+        table.base_view.stub.hop.map((hopper, pos) => {
             let header = hopper();
             if (header) {
                 header.select();
@@ -270,34 +270,34 @@ export function get_matrix_mask(table:Table):MatrixSelection {
 
     table.headings.map((heading, index) => {
         const hop = table.view.heading.hops[index];
-        const loop = (heading.headers.length * hop) / table.view.heading.size;
-        const offset = 0;
+        const loop = table.base_view.heading.size / (heading.headers.length * hop);
+        let offset = 0;
         let level_mask = [];
         for (let index = 0; index < loop; index++) {
             heading.headers.forEach((header, index) => {
                 if (header.selected) {
-                    let start = offset + hop * index;
-                    level_mask.push(_.range(start, start + hop));
+                    level_mask.push(_.range(offset, offset + hop));
                 }
+                offset += hop;
             });
         }
-        heading_mask.push(level_mask);
+        heading_mask.push(_.flatten(level_mask));
     });
 
     table.stubs.map((heading, index) => {
         const hop = table.view.stub.hops[index];
-        const loop = (heading.headers.length * hop) / table.view.heading.size;
-        const offset = 0;
+        const loop = table.base_view.stub.size / (heading.headers.length * hop);
+        let offset = 0;
         let level_mask = [];
         for (let index = 0; index < loop; index++) {
             heading.headers.forEach((header, index) => {
                 if (header.selected) {
-                    let start = offset + hop * index;
-                    level_mask.push(_.range(start, start + hop));
+                    level_mask.push(_.range(offset, offset + hop));
                 }
+                offset += hop;
             });
         }
-        heading_mask.push(level_mask);
+        stub_mask.push(_.flatten(level_mask));
     });
 
     // table.stubs.map((stub, index) => {
@@ -310,8 +310,8 @@ export function get_matrix_mask(table:Table):MatrixSelection {
     // });
     console.log("masking", heading_mask, stub_mask);
     return {
-        heading: _.intersection(heading_mask),
-        stub: _.intersection(stub_mask)
+        heading: _.intersection.apply({}, heading_mask),
+        stub: _.intersection.apply({}, stub_mask)
     };
 }
 
@@ -320,6 +320,7 @@ export class Table {
     headings: Heading[];
     stubs: Heading[];
     matrix: Matrix;
+    base_view: ITable;
     view: ITable;
 
     constructor (base: Dataset, preview=true) {
@@ -342,13 +343,14 @@ export class Table {
         }
         this.stubs = stubs;
 
-        this.view = get_table(
-            this.stubs.map((heading) => heading.headers),
-            this.headings.map((heading) => heading.headers));
+        this.base_view = get_table(
+            this.headings.map((heading) => heading.headers),
+            this.stubs.map((heading) => heading.headers)
+        );
 
-        if (preview) this.view = get_preview_table(this);
-
+        this.view = preview ? get_preview_table(this) : this.base_view;
     }
+
     // TODO: Refactor for Heading objects, not list of Headings
     selected_stub ():Headers[] {
         // selected headers on stub axis
