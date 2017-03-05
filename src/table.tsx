@@ -33,11 +33,13 @@ class TableHead extends React.Component<TableProps, {}> {
                     let header = hopper();
                     if (header) {
                         row.push(
-                            <th key={"head" + index + i} data-id={["heading", i]} colSpan={table.view.heading.hops[index]}>{header.name}</th>)
+                            // TODO: fix this completely random thing
+                            <th key={"head" + index + i + Math.random()} data-id={["heading", i]} colSpan={table.view.heading.hops[index]}>{header.name}</th>)
                     }
                 }
                 if (index == 0) {
-                    return <tr key={index}>
+                    // TODO: fix this completely random thing
+                    return <tr key={index + Math.random()}>
                         <th
                             className="centered"
                             colSpan={table.view.stub.headers.length}
@@ -47,6 +49,7 @@ class TableHead extends React.Component<TableProps, {}> {
                         {row}
                     </tr>
                 } else {
+                    // TODO: missed one randomize point
                     return <tr key={index}>{row}</tr>;
                 }
             });
@@ -60,7 +63,8 @@ function get_row_headers (stub, row_idx){
         let header = hopper();
         if (header) {
             resp.push(
-                <th data-id={["stub", row_idx]} key={"header" + index} rowSpan={stub.hops[index]}>{header.name}</th>
+                // TODO: fix this completely random thing
+                <th data-id={["stub", row_idx]} key={"header" + index + Math.random()} rowSpan={stub.hops[index]}>{header.name}</th>
             );
         }
     });
@@ -79,10 +83,12 @@ class TableBody extends React.Component<TableProps, {}> {
             let data = [];
             for (let col=0; col < width; col++) {
                 data.push(
-                    <td key={"heading" + row + col}>{table.matrix[row][col]}</td>
+                    // TODO: fix this completely random thing
+                    <td key={"heading" + row + col + Math.random()}>{table.matrix[row][col]}</td>
                 );
             }
-            resp.push(<tr key={row}>
+            // TODO: fix this completely random thing
+            resp.push(<tr key={row + Math.random()}>
                 {get_row_headers(table.view.stub, row)}
                 {data}
             </tr>);
