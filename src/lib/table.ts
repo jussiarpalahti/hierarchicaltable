@@ -269,7 +269,7 @@ export function get_matrix_mask(table:Table):MatrixSelection {
     let heading_mask = [];
 
     table.headings.map((heading, index) => {
-        const hop = table.view.heading.hops[index];
+        const hop = table.base_view.heading.hops[index];
         const loop = table.base_view.heading.size / (heading.headers.length * hop);
         let offset = 0;
         let level_mask = [];
@@ -285,7 +285,7 @@ export function get_matrix_mask(table:Table):MatrixSelection {
     });
 
     table.stubs.map((heading, index) => {
-        const hop = table.view.stub.hops[index];
+        const hop = table.base_view.stub.hops[index];
         const loop = table.base_view.stub.size / (heading.headers.length * hop);
         let offset = 0;
         let level_mask = [];
