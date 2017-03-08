@@ -25,21 +25,22 @@ class TableHead extends React.Component<TableProps, {}> {
         let {table} = this.props;
 
         let {height, width} = get_dimensions(table);
-
+        let rolling = 0;
+        let active_heading;
         let resp = table.view.heading.hop.map(
             (hopper, index) => {
                 let row = [];
                 for (let i=0; i < width; i++) {
                     let header = hopper();
                     if (header) {
+                        active_heading = header.heading;
                         row.push(
-                            // TODO: fix this completely random thing
-                            <th key={"head" + index + i + Math.random()} data-id={["heading", i]} colSpan={table.view.heading.hops[index]}>{header.name}</th>)
+                            <th key={header.name + rolling} data-id={[header.heading, i]} colSpan={table.view.heading.hops[index]}>{header.name}</th>)
+                        rolling += 1;
                     }
                 }
                 if (index == 0) {
-                    // TODO: fix this completely random thing
-                    return <tr key={index + Math.random()}>
+                    return <tr key="base">
                         <th
                             className="centered"
                             colSpan={table.view.stub.headers.length}
@@ -49,8 +50,7 @@ class TableHead extends React.Component<TableProps, {}> {
                         {row}
                     </tr>
                 } else {
-                    // TODO: missed one randomize point
-                    return <tr key={index}>{row}</tr>;
+                    return <tr key={active_heading ? active_heading.name + index : index}>{row}</tr>;
                 }
             });
         return <thead>{resp}</thead>;
@@ -64,7 +64,7 @@ function get_row_headers (stub, row_idx){
         if (header) {
             resp.push(
                 // TODO: fix this completely random thing
-                <th data-id={["stub", row_idx]} key={"header" + index + Math.random()} rowSpan={stub.hops[index]}>{header.name}</th>
+                <th key={header.heading.name + header.name + row_idx} data-id={[header, row_idx]} rowSpan={stub.hops[index]}>{header.name}</th>
             );
         }
     });
@@ -83,12 +83,10 @@ class TableBody extends React.Component<TableProps, {}> {
             let data = [];
             for (let col=0; col < width; col++) {
                 data.push(
-                    // TODO: fix this completely random thing
-                    <td key={"heading" + row + col + Math.random()}>{table.matrix[row][col]}</td>
+                    <td key={`${height}_${width}_${row}_${col}`}>{table.matrix[row][col]}</td>
                 );
             }
-            // TODO: fix this completely random thing
-            resp.push(<tr key={row + Math.random()}>
+            resp.push(<tr key={`${height}_${width}_${row}`}>
                 {get_row_headers(table.view.stub, row)}
                 {data}
             </tr>);

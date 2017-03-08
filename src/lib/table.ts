@@ -6,12 +6,14 @@ export class Header {
     name: string;
     code: string;
     selected: boolean;
+    heading: Heading;
 
-    constructor (header) {
+    constructor (header, heading?) {
         let {name, code, selected} = header;
         this.name = name;
         this.code = code;
         this.selected = selected;
+        this.heading = heading;
     }
 
     select () {
@@ -330,7 +332,7 @@ export class Table {
         let headings = [];
         for (let heading_name of base.heading) {
             let heading = new Heading(heading_name);
-            heading.headers = levels[heading_name].map(header => new Header(header));
+            heading.headers = levels[heading_name].map(header => new Header(header, heading));
             headings.push(heading);
         }
         this.headings = headings;
@@ -338,7 +340,7 @@ export class Table {
         let stubs = [];
         for (let heading_name of base.stub) {
             let heading = new Heading(heading_name);
-            heading.headers = levels[heading_name].map(header => new Header(header));
+            heading.headers = levels[heading_name].map(header => new Header(header, heading));
             stubs.push(heading);
         }
         this.stubs = stubs;
