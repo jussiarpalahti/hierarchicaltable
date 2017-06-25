@@ -10,12 +10,5 @@
 		"removeComments": false,
 		"target": "es5",
 		"sourceMap": true
-	},
-	"files": [
-		"typings/index.d.ts",
-		"src/index",
-		"src/table",
-		"src/ManualTable",
-		"src/lib/table"
-	]
+	}
 }

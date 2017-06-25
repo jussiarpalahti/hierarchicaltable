@@ -8,14 +8,12 @@
     "2pretest": "tsc test/*test.tsx --module commonjs --jsx react",
     "2test": "mocha",
     "2autotest": "supervisor -q -n exit -x mocha -- -b",
-    "test": "mocha --opts mocha.opts",
-    "test:auto": "mocha --opts mocha.opts --watch",
-    "typings": "typings",
+    "test": "jest",
     "tsc": "tsc",
     "cbuild": "cbuild",
     "bundle": "cbuild -d -v -m systemjs-hot-reloader -o dist/bundle.js -C config-npm.js",
     "bundle-reloader": "cbuild -d -v -s node_modules/systemjs-hot-reloader/hot-reloader.js -o reloader-bundle.js -C config-reloader.js",
-    "prepublish": "typings install && tsc && npm run bundle",
+    "prepublish": "npm run bundle",
     "start": "NODE_ENV=development node server/server.js",
     "tsn": "ts-node"
   },
@@ -36,6 +34,18 @@
     "url": "https://github.com/jussiarpalahti/hierarchicaltable/issues"
   },
   "homepage": "https://github.com/jussiarpalahti/hierarchicaltable#readme",
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "json"
+    ]
+  },
   "dependencies": {
     "@types/react": "^0.14.55",
     "@types/react-dom": "^0.14.19",
@@ -43,23 +53,27 @@
     "react": "^15.3.0",
     "react-dom": "^15.3.0",
     "systemjs": "^0.19.36",
-    "systemjs-hot-reloader": "^0.5.8",
-    "typescript": "^2.1.4",
-    "typings": "^1.5.0"
+    "systemjs-hot-reloader": "^0.5.8"
   },
   "devDependencies": {
     "@types/chai": "^3.4.34",
     "@types/enzyme": "^2.5.39",
+    "@types/jest": "^20.0.2",
     "@types/lodash": "^4.14.44",
     "@types/mocha": "^2.2.35",
-    "@types/node": "^6.0.54",
     "@types/react-addons-test-utils": "^0.14.15",
     "cbuild": "^0.1.1",
     "chai": "^3.5.0",
     "enzyme": "^2.4.1",
+    "eslint": "^4.1.0",
+    "jest": "^20.0.4",
+    "jscs": "^3.0.7",
     "mocha": "^3.0.2",
     "react-addons-test-utils": "^15.3.0",
+    "ts-jest": "^20.0.6",
     "ts-node": "^1.7.3",
-    "typings": "^1.3.2"
+    "tslint": "^5.4.3",
+    "typescript": "2.3.4",
+    "typings": "^1.5.0"
   }
 }
