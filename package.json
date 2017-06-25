@@ -46,6 +46,9 @@
       "json"
     ]
   },
+  "quokka" : {
+    "node": "/Users/jta/.nvm/versions/node/v7.6.0/bin/node"
+  },
   "dependencies": {
     "@types/react": "^0.14.55",
     "@types/react-dom": "^0.14.19",
